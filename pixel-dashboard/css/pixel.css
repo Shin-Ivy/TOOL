@@ -605,51 +605,51 @@ a:hover { color: var(--yellow); }
    Colors snap instantly (no transitions).
    ============================================ */
 body[data-theme="light"] {
-  /* ── Backgrounds (GameBoy greens) ── */
-  --black:      #9bbc0f;   /* page background */
-  --dark:       #a8c820;   /* card / panel background (slightly lighter) */
-  --dark2:      #8bac0f;   /* secondary surface */
-  --dark3:      #b8d830;   /* input / button background (lightest) */
+  /* ── Backgrounds — warm cream, NOT pure white ── */
+  --black:      #F0EDE4;   /* page background    — warm cream     */
+  --dark:       #E6E2D8;   /* panel / sidebar bg — slightly darker */
+  --dark2:      #DAD6CB;   /* secondary surface  — warm beige     */
+  --dark3:      #F5F2EB;   /* input / button bg  — lightest cream */
 
-  /* ── Primary colour — dark forest green replaces neon ── */
-  --green:      #0f380f;
-  --green-dim:  #306230;
-  --green-dark: #306230;
+  /* ── Primary: deep forest green (readable, never neon) ── */
+  --green:      #2D5A1B;
+  --green-dim:  #4A7A2D;
+  --green-dark: #1A3A0D;
 
-  /* ── Accent colours — darker, suitable for light background ── */
-  --pink:       #8b0057;
-  --pink-dim:   #5a003a;
-  --blue:       #0000aa;
-  --blue-dim:   #000077;
-  --yellow:     #887000;
-  --yellow-dim: #554400;
-  --orange:     #aa4400;
-  --red:        #aa0000;
-  --red-dim:    #770000;
+  /* ── Accents: muted, integrated tones ── */
+  --pink:       #8B3050;   /* dusty rose — not harsh magenta */
+  --pink-dim:   #5C1F35;
+  --blue:       #1E5C8A;   /* slate/steel blue — not harsh cobalt */
+  --blue-dim:   #123D5C;
+  --yellow:     #7A6000;   /* dark amber/gold */
+  --yellow-dim: #4A3A00;
+  --orange:     #7A3800;   /* burnt sienna */
+  --red:        #7A1515;   /* muted crimson */
+  --red-dim:    #4A0A0A;
 
-  /* ── Text / grays ── */
-  --white:      #0f380f;
-  --gray:       #306230;
-  --gray-light: #4a7a1a;
+  /* ── Text / grays — warm-tinted, never pure black on cream ── */
+  --white:      #1C2B1C;   /* primary text: very dark forest green */
+  --gray:       #5C6B5C;   /* secondary borders / dividers */
+  --gray-light: #8A9A8A;   /* muted labels / placeholder text */
 
   /* ── Border shorthands ── */
-  --border-green: 3px solid #0f380f;
-  --border-pink:  3px solid #8b0057;
-  --border-blue:  3px solid #0000aa;
-  --border-gray:  3px solid #306230;
+  --border-green: 3px solid #2D5A1B;
+  --border-pink:  3px solid #8B3050;
+  --border-blue:  3px solid #1E5C8A;
+  --border-gray:  3px solid #5C6B5C;
 
-  /* ── Pixel box-shadows ── */
-  --px-shadow-green:  4px 4px 0 #306230;
-  --px-shadow-pink:   4px 4px 0 #5a003a;
-  --px-shadow-blue:   4px 4px 0 #000077;
-  --px-shadow-yellow: 4px 4px 0 #554400;
-  --px-shadow-red:    4px 4px 0 #770000;
+  /* ── Pixel box-shadows (muted, not jarring) ── */
+  --px-shadow-green:  4px 4px 0 #4A7A2D;
+  --px-shadow-pink:   4px 4px 0 #5C1F35;
+  --px-shadow-blue:   4px 4px 0 #123D5C;
+  --px-shadow-yellow: 4px 4px 0 #4A3A00;
+  --px-shadow-red:    4px 4px 0 #4A0A0A;
 }
 
 /* Scrollbar — light theme */
 body[data-theme="light"]::-webkit-scrollbar-track { background: var(--dark); border-left: 3px solid var(--green-dim); }
-body[data-theme="light"]::-webkit-scrollbar-thumb { background: var(--green-dim); border: 2px solid var(--black); }
-body[data-theme="light"]::-webkit-scrollbar-thumb:hover { background: var(--green); }
+body[data-theme="light"]::-webkit-scrollbar-thumb { background: var(--green); border: 2px solid var(--black); }
+body[data-theme="light"]::-webkit-scrollbar-thumb:hover { background: var(--green-dark); }
 
 /* ============================================
    THEME TOGGLE BUTTON
@@ -715,18 +715,17 @@ body[data-theme="light"]::-webkit-scrollbar-thumb:hover { background: var(--gree
 }
 
 body[data-theme="light"] {
-  /* Light mode — muted GameBoy sage-to-olive */
+  /* Light mode — barely-there warm cream gradient */
   --page-bg: linear-gradient(
     158deg,
-    #92b40e 0%,
-    #9bbc0f 45%,
-    #8eaf0c 75%,
-    #96b810 100%
+    #F0EDE4 0%,
+    #EAE6DA 45%,
+    #EDE8DE 100%
   );
   --tool-area-bg: linear-gradient(
     180deg,
-    #9bbc0f 0%,
-    #96b70d 100%
+    #E6E2D8 0%,
+    #EAE5D8 100%
   );
 }
 
@@ -980,6 +979,53 @@ body { background: var(--page-bg); }
   color: var(--gray-light);
   line-height: 1.55;
   margin: 0;
+}/* ============================================
+   MECHANICAL BUG SCENE
+   Side-profile pixel-art bug, 2-frame walk
+   ============================================ */
+
+/* Hide Pac-Man if it somehow still exists */
+#px-pac-scene { display: none !important; }
+
+/* Scene wrapper */
+#px-bug-scene {
+  position: fixed;
+  bottom: 16px;
+  left: 0;
+  pointer-events: none;
+  z-index: 50;
+  image-rendering: pixelated;
+  animation: bug-roam 24s linear infinite;
 }
 
+/* Bug SVG — keep pixelated rendering */
+#px-bug-svg {
+  image-rendering: pixelated;
+  display: block;
+}
 
+/* ── Leg frame alternation (steps = no smooth interpolation) ── */
+#bug-legs-a {
+  animation: bug-leg-a 0.28s steps(1) infinite;
+}
+#bug-legs-b {
+  animation: bug-leg-b 0.28s steps(1) infinite;
+}
+
+@keyframes bug-leg-a {
+  0%,  49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes bug-leg-b {
+  0%,  49% { opacity: 0; }
+  50%, 100% { opacity: 1; }
+}
+
+/* ── Horizontal roam — flip on return leg ── */
+@keyframes bug-roam {
+  0%   { transform: translateX(-120px)             scaleX(1);  }
+  44%  { transform: translateX(calc(100vw - 40px)) scaleX(1);  }
+  50%  { transform: translateX(calc(100vw - 40px)) scaleX(-1); }
+  94%  { transform: translateX(-120px)             scaleX(-1); }
+  100% { transform: translateX(-120px)             scaleX(1);  }
+}

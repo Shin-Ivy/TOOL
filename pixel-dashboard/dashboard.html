@@ -697,25 +697,74 @@ function toggleTheme() {
 })();
 </script>
 
-<!-- ── PAC-MAN SCENE ── -->
-<div id="px-pac-scene" aria-hidden="true">
-  <!-- Pac-Man character + eye -->
-  <div id="px-pac-char">
-    <div id="px-pac-eye"></div>
-  </div>
-  <!-- Pellet trail (always rendered ahead of Pac-Man) -->
-  <div id="px-pac-dots">
-    <div class="px-pellet"></div>
-    <div class="px-pellet"></div>
-    <div class="px-pellet px-pellet-big"></div>
-    <div class="px-pellet"></div>
-    <div class="px-pellet"></div>
-    <div class="px-pellet"></div>
-    <div class="px-pellet px-pellet-big"></div>
-    <div class="px-pellet"></div>
-    <div class="px-pellet"></div>
-    <div class="px-pellet"></div>
-  </div>
+<!-- ── MECHANICAL BUG SCENE ── -->
+<div id="px-bug-scene" aria-hidden="true">
+  <svg id="px-bug-svg" viewBox="0 0 22 9" width="88" height="36"
+       xmlns="http://www.w3.org/2000/svg">
+
+    <!-- ── ANTENNA ── -->
+    <rect x="1" y="0" width="1" height="1" fill="#39ff14"/>
+    <rect x="2" y="1" width="1" height="1" fill="#39ff14"/>
+
+    <!-- ── HEAD (4×3) ── -->
+    <rect x="1" y="2" width="4" height="3" fill="#39ff14"/>
+    <!-- Eye (cyan accent) -->
+    <rect x="2" y="3" width="1" height="1" fill="#0ff0fc"/>
+    <!-- Jaw detail -->
+    <rect x="1" y="4" width="2" height="1" fill="#1a8a00"/>
+    <!-- Mandible -->
+    <rect x="0" y="3" width="1" height="1" fill="#39ff14"/>
+
+    <!-- ── NECK JOINT ── -->
+    <rect x="5" y="3" width="1" height="1" fill="#0a0a0a"/>
+
+    <!-- ── BODY SEGMENT 1 (4×3) ── -->
+    <rect x="6" y="2" width="4" height="3" fill="#22a005"/>
+    <!-- Segment highlight -->
+    <rect x="7" y="2" width="2" height="1" fill="#39ff14"/>
+
+    <!-- ── SEGMENT JOINT 1 ── -->
+    <rect x="10" y="2" width="1" height="3" fill="#0a0a0a"/>
+
+    <!-- ── BODY SEGMENT 2 (4×3) ── -->
+    <rect x="11" y="2" width="4" height="3" fill="#22a005"/>
+    <rect x="12" y="2" width="2" height="1" fill="#39ff14"/>
+
+    <!-- ── SEGMENT JOINT 2 ── -->
+    <rect x="15" y="2" width="1" height="3" fill="#0a0a0a"/>
+
+    <!-- ── TAIL / ABDOMEN (tapered) ── -->
+    <rect x="16" y="2" width="3" height="3" fill="#1a8a00"/>
+    <rect x="19" y="3" width="2" height="1" fill="#1a8a00"/>
+    <rect x="21" y="3" width="1" height="1" fill="#0d4400"/>
+
+    <!-- ── LEG FRAME A (legs extended down) ── -->
+    <g id="bug-legs-a">
+      <!-- Front pair -->
+      <rect x="7"  y="5" width="1" height="2" fill="#39ff14"/>
+      <rect x="7"  y="6" width="2" height="1" fill="#39ff14"/>
+      <!-- Middle pair -->
+      <rect x="12" y="5" width="1" height="2" fill="#39ff14"/>
+      <rect x="12" y="6" width="2" height="1" fill="#39ff14"/>
+      <!-- Back pair -->
+      <rect x="17" y="5" width="1" height="2" fill="#1a8a00"/>
+      <rect x="17" y="6" width="2" height="1" fill="#1a8a00"/>
+    </g>
+
+    <!-- ── LEG FRAME B (alternate — legs swept back) ── -->
+    <g id="bug-legs-b">
+      <!-- Front pair swept back -->
+      <rect x="6"  y="5" width="2" height="1" fill="#39ff14"/>
+      <rect x="8"  y="5" width="1" height="2" fill="#39ff14"/>
+      <!-- Middle pair swept back -->
+      <rect x="11" y="5" width="2" height="1" fill="#39ff14"/>
+      <rect x="13" y="5" width="1" height="2" fill="#39ff14"/>
+      <!-- Back pair swept back -->
+      <rect x="16" y="5" width="2" height="1" fill="#1a8a00"/>
+      <rect x="18" y="5" width="1" height="2" fill="#1a8a00"/>
+    </g>
+
+  </svg>
 </div>
 
 </body>
