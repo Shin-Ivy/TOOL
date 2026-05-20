@@ -484,6 +484,15 @@
 
       <!-- HOME -->
       <div id="tool-home" class="tool-panel active">
+        <!-- ARCADE HEADER -->
+        <div id="home-arcade-header">
+          <img src="img/arcade_header.png" alt="PIXEL.TOOLS Arcade" id="arcade-header-img">
+          <div id="arcade-header-overlay">
+            <span class="arcade-title-text">PIXEL.TOOLS</span>
+            <span class="arcade-subtitle-text">// YOUR RETRO WEB TOOLBOX //</span>
+          </div>
+        </div>
+
         <div class="tool-header">
           <h2>▸ COMMAND CENTER</h2>
           <p>Select a tool from the sidebar or the grid below. PLAYER ONE, START!</p>
@@ -688,38 +697,25 @@ function toggleTheme() {
 })();
 </script>
 
-<!-- ── PIXEL ROBOT BUDDY ── -->
-<div id="px-robot" aria-hidden="true">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 14" width="50" height="70">
-    <!-- Antenna -->
-    <rect x="4" y="0" width="2" height="1" fill="#39ff14"/>
-    <rect x="4" y="0" width="2" height="1" fill="#ffe600" opacity="0.6"/>
-    <!-- Head -->
-    <rect x="1" y="1" width="8" height="5" fill="#39ff14"/>
-    <!-- Eye left -->
-    <rect x="2" y="2" width="2" height="2" fill="#0a0a0a"/>
-    <rect x="2" y="2" width="2" height="2" fill="#ff2079" opacity="0.85"/>
-    <!-- Eye right -->
-    <rect x="6" y="2" width="2" height="2" fill="#0a0a0a"/>
-    <rect x="6" y="2" width="2" height="2" fill="#ff2079" opacity="0.85"/>
-    <!-- Mouth -->
-    <rect x="2" y="5" width="6" height="1" fill="#0a0a0a"/>
-    <rect x="3" y="5" width="4" height="1" fill="#0ff0fc"/>
-    <!-- Neck -->
-    <rect x="4" y="6" width="2" height="1" fill="#1a8a00"/>
-    <!-- Body -->
-    <rect x="0" y="7" width="10" height="4" fill="#39ff14"/>
-    <!-- Chest panel -->
-    <rect x="3" y="8" width="4" height="2" fill="#0a0a0a"/>
-    <rect x="4" y="8" width="2" height="1" fill="#0ff0fc"/>
-    <rect x="3" y="9" width="4" height="1" fill="#1a8a00"/>
-    <!-- Legs frame A (even steps show this via bob) -->
-    <rect x="1" y="11" width="3" height="3" fill="#39ff14"/>
-    <rect x="6" y="11" width="3" height="3" fill="#39ff14"/>
-    <!-- Boot highlight -->
-    <rect x="1" y="13" width="3" height="1" fill="#1a8a00"/>
-    <rect x="6" y="13" width="3" height="1" fill="#1a8a00"/>
-  </svg>
+<!-- ── PAC-MAN SCENE ── -->
+<div id="px-pac-scene" aria-hidden="true">
+  <!-- Pac-Man character + eye -->
+  <div id="px-pac-char">
+    <div id="px-pac-eye"></div>
+  </div>
+  <!-- Pellet trail (always rendered ahead of Pac-Man) -->
+  <div id="px-pac-dots">
+    <div class="px-pellet"></div>
+    <div class="px-pellet"></div>
+    <div class="px-pellet px-pellet-big"></div>
+    <div class="px-pellet"></div>
+    <div class="px-pellet"></div>
+    <div class="px-pellet"></div>
+    <div class="px-pellet px-pellet-big"></div>
+    <div class="px-pellet"></div>
+    <div class="px-pellet"></div>
+    <div class="px-pellet"></div>
+  </div>
 </div>
 
 </body>

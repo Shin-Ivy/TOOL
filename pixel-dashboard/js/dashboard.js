@@ -85,6 +85,39 @@ const TOOL_INITS = {
   jsonformat: () => typeof JsonFmt !== 'undefined'     && JsonFmt.init(),
 };
 
+/* ── TOOL DESCRIPTIONS ── */
+const TOOL_DESCRIPTIONS = {
+  ipgeo:       'Instantly look up any IP address or domain and reveal its geographic location, ISP, timezone, and network details. Paste any IPv4, IPv6, or hostname to get a full intelligence report — no account required.',
+  subnet:      'A full CIDR/subnet calculator for network engineers. Input any IP and prefix length to instantly compute the network address, broadcast address, usable host range, wildcard mask, and total host count.',
+  ping:        'Simulate HTTP latency checks directly from your browser. Measure round-trip response times for any public URL, visualize latency trends over multiple pings, and diagnose connectivity issues without leaving the dashboard.',
+  base64:      'Encode any text or binary data to Base64, or decode Base64/URL-encoded strings back to plaintext. Supports standard Base64, URL-safe Base64, and percent-encoding — essential for debugging APIs and auth tokens.',
+  palette:     'Generate harmonious 8-bit color palettes from a seed color or at random. Export palettes as CSS variables, HEX arrays, or pixel-art swatches. Perfect for retro game dev, pixel art, and UI theming.',
+  texttools:   'A multi-function text transformer. Change case (upper, lower, title, camelCase, snake_case), count words and characters, strip whitespace, reverse strings, and run simple regex find-and-replace — all in one place.',
+  todo:        'A persistent task manager with streak tracking. Add, complete, and delete tasks that survive browser refreshes via localStorage. Build daily habits and watch your streak counter climb — gamified productivity.',
+  pomodoro:    'A classic Pomodoro focus timer with pixel-art styling. Work in 25-minute focused sessions separated by short breaks. Audio cues and a visible countdown keep you on track without disrupting your flow.',
+  jsonformat:  'Validate, format, and pretty-print raw JSON in seconds. Paste minified or malformed JSON to instantly detect syntax errors, reformat with proper indentation, and copy the clean output — ideal for API debugging.',
+  'ai-ctx':    'An intelligent code context optimizer for LLM prompts. Paste your codebase snippet and target token budget; the tool trims comments, whitespace, and boilerplate to maximize information density within your context window.',
+  'micro-digest': 'A universal document summarizer powered by AI. Paste any text — meeting notes, articles, PDFs — and receive a concise, structured digest in seconds. No file size limits, no subscriptions, no data sent to external servers.',
+  'content-wiz':  'The Content Repurposing Wizard transforms a single idea or article into multiple social media formats simultaneously. Generate Twitter/X threads, LinkedIn posts, Instagram captions, and newsletter snippets from one source.',
+  'hd-format':    'A local photo and video upscaler running entirely in your browser via WebGPU and WASM. No uploads, no cloud — your files never leave your device. Increase resolution by 2x or 4x with AI-powered super-resolution.',
+  'stem-sep':     'Separate any song into isolated stems — vocals, drums, bass, and other instruments — using ONNX Web inference running 100% locally. Free, unlimited, and private: your audio is processed entirely on-device.',
+  'loudness':     'Automatically normalize audio files to broadcast loudness standards (LUFS) used by Spotify, YouTube, and Apple Music. Powered by the Web Audio API, it analyzes and adjusts gain without quality loss, all in your browser.',
+};
+
+/* ── INJECT TOOL DESCRIPTION ── */
+function injectToolDesc(toolId) {
+  const desc = TOOL_DESCRIPTIONS[toolId];
+  if (!desc) return;
+  const panel = document.getElementById('tool-' + toolId);
+  if (!panel || panel.querySelector('.tool-desc-box')) return; // already injected
+  const box = document.createElement('div');
+  box.className = 'tool-desc-box';
+  box.innerHTML =
+    '<div class="tool-desc-label">▸ ABOUT THIS TOOL</div>' +
+    '<p class="tool-desc-text">' + desc + '</p>';
+  panel.insertBefore(box, panel.firstChild);
+}
+
 const initializedTools = new Set(['home']);
 
 /* ── SWITCH TOOL ── */
@@ -109,8 +142,11 @@ function switchTool(toolId) {
   document.getElementById('status-tool').textContent = 'TOOL: ' + name;
 
   // Initialize tool on first visit
-  if (!initializedTools.has(toolId) && TOOL_INITS[toolId]) {
-    TOOL_INITS[toolId]();
+  if (!initializedTools.has(toolId)) {
+    injectToolDesc(toolId);          // prepend description box first
+    if (TOOL_INITS[toolId]) {
+      TOOL_INITS[toolId]();
+    }
     initializedTools.add(toolId);
   }
 
