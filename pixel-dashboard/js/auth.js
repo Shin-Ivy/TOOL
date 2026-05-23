@@ -151,6 +151,11 @@ async function handleTokenResponse(tokenResp) {
     }
 
     storeUser(profile);
+
+    if (typeof window.PixelLoginUI?.onAuthSuccess === 'function') {
+      await window.PixelLoginUI.onAuthSuccess(profile);
+    }
+
     animateHpBar(100, 300);
     showLoadingMsg(`ACCESS GRANTED — WELCOME, ${(profile.name || 'PLAYER').toUpperCase()}!`);
 

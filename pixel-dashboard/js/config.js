@@ -12,14 +12,14 @@
  * 6. Salin Client ID → paste di bawah
  *
  * ⚠️  Client SECRET tidak dibutuhkan — ini client-side only (GIS).
- * ⚠️  Jangan commit file ini ke GitHub jika repo kamu PUBLIC.
- *     Tambahkan "js/config.js" ke .gitignore
+ * ⚠️  Supabase: isi pixel-dashboard/.env.local lalu `npm run sync:supabase`
+ * ⚠️  Jangan commit js/config.js atau .env.local jika repo PUBLIC.
  */
 
 const APP_CONFIG = {
   // ← GANTI INI dengan Client ID kamu
   GOOGLE_CLIENT_ID: '776587796650-05ih700lu0vtp211f860r90e7rhgr6es.apps.googleusercontent.com',
 
-  // Versi aplikasi (tidak perlu diubah)
+  // Supabase: set pixel-dashboard/.env.local → npm run sync:supabase (see README)
   VERSION: '1.0.0',
 };

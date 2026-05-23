@@ -225,6 +225,20 @@ a:hover { color: var(--yellow); }
   box-shadow: 0 0 0 var(--yellow-dim);
 }
 
+.px-btn-orange {
+  color: var(--orange);
+  box-shadow: 4px 4px 0 #6b3800;
+}
+.px-btn-orange:hover {
+  background: var(--orange);
+  color: var(--black);
+  box-shadow: 4px 4px 0 #6b3800;
+}
+.px-btn-orange:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 #6b3800;
+}
+
 .px-btn-red {
   color: var(--red);
   box-shadow: 4px 4px 0 var(--red-dim);
@@ -751,6 +765,61 @@ body { background: var(--page-bg); }
 .tool-card.cat-visual:hover  { border-color: var(--pink); box-shadow: 4px 4px 0 var(--pink-dim); }
 .tool-card.cat-visual:active { transform: translate(4px,4px); box-shadow: 0 0 0 var(--pink-dim); }
 
+/* System tools — neon green */
+.tool-card.cat-system { border-color: var(--green); }
+.tool-card.cat-system:hover  { border-color: var(--green); box-shadow: 4px 4px 0 var(--green-dim); }
+.tool-card.cat-system:active { transform: translate(4px,4px); box-shadow: 0 0 0 var(--green-dim); }
+
+/* Windows Debloater — 8-bit option grid */
+.debloat-grid-panel {
+  margin-top: 16px;
+  box-shadow: 4px 4px 0 var(--green-dim);
+}
+.debloat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 16px 0 20px;
+}
+.debloat-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px;
+  border: 3px solid var(--gray);
+  background: var(--dark2);
+  cursor: pointer;
+  font-family: var(--font-vt);
+  font-size: 20px;
+  color: var(--gray-light);
+  box-shadow: 3px 3px 0 var(--dark3);
+  transition: none;
+}
+.debloat-option:hover {
+  border-color: var(--green);
+  color: var(--green);
+  box-shadow: 3px 3px 0 var(--green-dim);
+}
+.debloat-option:has(input:checked) {
+  border-color: var(--green);
+  color: var(--green);
+  background: var(--green-dark);
+  box-shadow: 3px 3px 0 var(--green-dim);
+  text-shadow: 0 0 6px var(--green);
+}
+.debloat-option input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--green);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.debloat-generate-wrap {
+  text-align: center;
+  padding-top: 8px;
+  border-top: 3px dashed var(--green-dim);
+}
+
 /* ============================================
    PIXEL ROBOT — 8-BIT BUDDY
    ============================================ */
@@ -980,52 +1049,313 @@ body { background: var(--page-bg); }
   line-height: 1.55;
   margin: 0;
 }/* ============================================
-   MECHANICAL BUG SCENE
-   Side-profile pixel-art bug, 2-frame walk
+   DASHBOARD FOOTER — COMPACT NEON GRID + AI DRONE
+   Document flow only (not position: fixed).
    ============================================ */
 
-/* Hide Pac-Man if it somehow still exists */
-#px-pac-scene { display: none !important; }
+/* Retired fixed crawlers (caterpillar / bug / pac) */
+#px-robot,
+#px-pac-scene,
+#px-bug-scene,
+.caterpillar,
+.gundam-glide,
+.gundam-sprite {
+  display: none !important;
+}
 
-/* Scene wrapper */
-#px-bug-scene {
-  position: fixed;
-  bottom: 16px;
+.dash-footer {
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+  min-height: clamp(72px, 12vw, 96px);
+  margin-top: auto;
+  border-top: 3px solid var(--green);
+  background:
+    linear-gradient(180deg, rgba(6, 12, 18, 0.95) 0%, rgba(2, 4, 8, 1) 70%),
+    var(--black);
+  overflow: hidden;
+  box-shadow: 0 -4px 16px rgba(57, 255, 20, 0.1);
+}
+
+/* Neon perspective grid — reduced height */
+.dash-footer__grid-floor {
+  position: absolute;
   left: 0;
+  right: 0;
+  bottom: 0;
+  height: 72%;
+  background-color: rgba(4, 8, 14, 0.94);
+  background-image:
+    linear-gradient(rgba(15, 240, 252, 0.4) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(15, 240, 252, 0.28) 1px, transparent 1px),
+    linear-gradient(rgba(57, 255, 20, 0.14) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(57, 255, 20, 0.1) 1px, transparent 1px);
+  background-size: 28px 28px, 28px 28px, 7px 7px, 7px 7px;
+  transform: perspective(200px) rotateX(48deg);
+  transform-origin: center bottom;
+  box-shadow:
+    inset 0 0 20px rgba(15, 240, 252, 0.12),
+    0 -1px 0 var(--green);
   pointer-events: none;
-  z-index: 50;
-  image-rendering: pixelated;
-  animation: bug-roam 24s linear infinite;
 }
 
-/* Bug SVG — keep pixelated rendering */
-#px-bug-svg {
-  image-rendering: pixelated;
+.dash-footer__deck {
+  position: relative;
+  z-index: 2;
+  height: clamp(52px, 10vw, 72px);
+  margin-top: 2px;
+}
+
+/* Horizontal patrol — wrapper (X via left) */
+.ai-drone-glide {
+  position: absolute;
+  left: 0;
+  bottom: 2px;
+  width: 72px;
+  height: 52px;
+  animation: ai-drone-glide 28s ease-in-out infinite alternate;
+  will-change: left;
+}
+
+/* Engineered AI drone — native SVG, multi-joint pixel rig */
+.ai-drone {
   display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  filter: drop-shadow(0 0 8px rgba(15, 240, 252, 0.5))
+          drop-shadow(3px 4px 0 rgba(0, 0, 0, 0.8));
+  animation: ai-drone-bob 5s ease-in-out infinite;
+  will-change: transform;
 }
 
-/* ── Leg frame alternation (steps = no smooth interpolation) ── */
-#bug-legs-a {
-  animation: bug-leg-a 0.28s steps(1) infinite;
-}
-#bug-legs-b {
-  animation: bug-leg-b 0.28s steps(1) infinite;
+.drone-thruster {
+  animation: drone-thruster-pulse 0.6s steps(2) infinite;
 }
 
-@keyframes bug-leg-a {
-  0%,  49% { opacity: 1; }
-  50%, 100% { opacity: 0; }
-}
-@keyframes bug-leg-b {
-  0%,  49% { opacity: 0; }
-  50%, 100% { opacity: 1; }
+.drone-antenna {
+  animation: drone-antenna-blink 1.2s steps(1) infinite;
 }
 
-/* ── Horizontal roam — flip on return leg ── */
-@keyframes bug-roam {
-  0%   { transform: translateX(-120px)             scaleX(1);  }
-  44%  { transform: translateX(calc(100vw - 40px)) scaleX(1);  }
-  50%  { transform: translateX(calc(100vw - 40px)) scaleX(-1); }
-  94%  { transform: translateX(-120px)             scaleX(-1); }
-  100% { transform: translateX(-120px)             scaleX(1);  }
+.drone-joint-a {
+  animation: drone-joint-a 0.5s steps(2) infinite;
+  transform-origin: 8px 13px;
+}
+
+.drone-joint-b {
+  animation: drone-joint-b 0.5s steps(2) infinite;
+  transform-origin: 8px 19px;
+}
+
+.drone-legs {
+  animation: drone-legs-walk 0.4s steps(2) infinite;
+}
+
+@keyframes ai-drone-bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+
+@keyframes ai-drone-glide {
+  0%   { left: 3%; }
+  100% { left: calc(97% - 72px); }
+}
+
+@keyframes drone-thruster-pulse {
+  0%, 100% { opacity: 1; fill: #0ff0fc; }
+  50%      { opacity: 0.45; fill: #39ff14; }
+}
+
+@keyframes drone-antenna-blink {
+  0%, 70%  { opacity: 1; }
+  71%, 100% { opacity: 0.35; }
+}
+
+@keyframes drone-joint-a {
+  0%, 49%  { transform: rotate(0deg); }
+  50%, 100% { transform: rotate(-6deg); }
+}
+
+@keyframes drone-joint-b {
+  0%, 49%  { transform: rotate(0deg); }
+  50%, 100% { transform: rotate(5deg); }
+}
+
+@keyframes drone-legs-walk {
+  0%, 49%  { transform: translateY(0); }
+  50%, 100% { transform: translateY(1px); }
+}
+
+.dash-footer__hud {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 12px 6px;
+  border-top: 2px dashed rgba(57, 255, 20, 0.3);
+  font-family: var(--font-pixel);
+  font-size: 5px;
+  color: var(--gray-light);
+  letter-spacing: 0.5px;
+  min-height: 20px;
+}
+
+.dash-footer__brand {
+  color: var(--green);
+  text-shadow: 0 0 6px var(--green);
+}
+
+.dash-footer__tag {
+  color: var(--blue);
+  text-shadow: 0 0 4px var(--blue);
+}
+
+/* Dashboard settings — viewport bottom-right */
+.dash-settings-fab {
+  position: fixed;
+  right: 14px;
+  bottom: 14px;
+  z-index: 500;
+  font-family: var(--font-pixel);
+  font-size: 6px;
+  letter-spacing: 0.5px;
+  padding: 10px 12px;
+  background: #050a1aee;
+  color: var(--blue);
+  border: 3px solid var(--blue);
+  box-shadow: 4px 4px 0 var(--blue-dim), 0 0 14px #0ff0fc44;
+  cursor: pointer;
+  text-transform: uppercase;
+  outline: none;
+}
+
+.dash-settings-fab:hover {
+  background: var(--blue-dim);
+  color: var(--black);
+  box-shadow: 4px 4px 0 var(--blue-dim), 0 0 20px #0ff0fc88;
+}
+
+.dash-settings-fab:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--blue-dim);
+}
+
+.dash-settings-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.dash-settings-modal.hidden {
+  display: none;
+}
+
+.dash-settings-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 6, 12, 0.72);
+}
+
+.dash-settings-modal__panel {
+  position: relative;
+  z-index: 1;
+  width: min(360px, 100%);
+  background: #050a1af8;
+  border: 4px solid var(--green);
+  box-shadow: 8px 8px 0 var(--green-dim), 0 0 32px #39ff1433;
+}
+
+.dash-settings-modal__head {
+  padding: 12px 14px;
+  font-family: var(--font-pixel);
+  font-size: 8px;
+  color: var(--green);
+  text-shadow: 0 0 8px var(--green);
+  border-bottom: 2px solid var(--green-dark);
+  letter-spacing: 1px;
+}
+
+.dash-settings-modal__body {
+  padding: 16px 14px;
+  min-height: 80px;
+}
+
+.dash-settings-placeholder {
+  font-family: var(--font-vt);
+  font-size: 18px;
+  color: var(--gray-light);
+  line-height: 1.4;
+  margin: 0;
+}
+
+.dash-settings-modal__foot {
+  padding: 10px 14px 12px;
+  border-top: 2px dashed var(--green-dim);
+  text-align: right;
+}
+
+@media (max-width: 768px) {
+  .dash-footer {
+    min-height: 68px;
+  }
+
+  .dash-footer__deck {
+    height: 48px;
+  }
+
+  .ai-drone-glide {
+    width: 58px;
+    height: 42px;
+    animation-duration: 24s;
+  }
+
+  .ai-drone {
+    animation-duration: 4.5s;
+  }
+
+  @keyframes ai-drone-glide {
+    0%   { left: 2%; }
+    100% { left: calc(98% - 58px); }
+  }
+
+  .dash-footer__grid-floor {
+    background-size: 22px 22px, 22px 22px, 6px 6px, 6px 6px;
+  }
+
+  .dash-settings-fab {
+    right: 10px;
+    bottom: 10px;
+    font-size: 5px;
+    padding: 8px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dash-footer__tag {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-drone-glide,
+  .ai-drone,
+  .drone-thruster,
+  .drone-antenna,
+  .drone-joint-a,
+  .drone-joint-b,
+  .drone-legs {
+    animation: none;
+  }
+
+  .ai-drone-glide {
+    left: 50%;
+    transform: translateX(-50%);
+  }
 }

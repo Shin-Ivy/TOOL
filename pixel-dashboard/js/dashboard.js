@@ -70,7 +70,14 @@ const TOOL_NAMES = {
   texttools:  'TEXT TOOLS',
   todo:       'TODO LIST',
   pomodoro:   'POMODORO',
-  jsonformat: 'JSON FORMAT'
+  jsonformat: 'JSON FORMAT',
+  'ai-ctx':       'AI CTX OPT',
+  'micro-digest': 'MICRO-DIGEST',
+  'content-wiz':  'CONTENT WIZ',
+  'hd-format':    'HD FORMAT',
+  'stem-sep':     'STEM SEP',
+  loudness:       'LOUDNESS',
+  'windows-debloater': 'WIN DEBLOAT'
 };
 
 const TOOL_INITS = {
@@ -83,6 +90,13 @@ const TOOL_INITS = {
   todo:       () => typeof TodoList !== 'undefined'    && TodoList.init(),
   pomodoro:   () => typeof Pomodoro !== 'undefined'    && Pomodoro.init(),
   jsonformat: () => typeof JsonFmt !== 'undefined'     && JsonFmt.init(),
+  'ai-ctx':       () => typeof AiCtxOpt !== 'undefined'    && AiCtxOpt.init(),
+  'micro-digest': () => typeof MicroDigest !== 'undefined' && MicroDigest.init(),
+  'content-wiz':  () => typeof ContentWiz !== 'undefined'  && ContentWiz.init(),
+  'hd-format':    () => typeof HdFormat !== 'undefined'    && HdFormat.init(),
+  'stem-sep':     () => typeof StemSep !== 'undefined'     && StemSep.init(),
+  loudness:       () => typeof LoudnessMatch !== 'undefined' && LoudnessMatch.init(),
+  'windows-debloater': () => typeof WindowsDebloater !== 'undefined' && WindowsDebloater.init(),
 };
 
 /* ── TOOL DESCRIPTIONS ── */
@@ -102,6 +116,7 @@ const TOOL_DESCRIPTIONS = {
   'hd-format':    'A local photo and video upscaler running entirely in your browser via WebGPU and WASM. No uploads, no cloud — your files never leave your device. Increase resolution by 2x or 4x with AI-powered super-resolution.',
   'stem-sep':     'Separate any song into isolated stems — vocals, drums, bass, and other instruments — using ONNX Web inference running 100% locally. Free, unlimited, and private: your audio is processed entirely on-device.',
   'loudness':     'Automatically normalize audio files to broadcast loudness standards (LUFS) used by Spotify, YouTube, and Apple Music. Powered by the Web Audio API, it analyzes and adjusts gain without quality loss, all in your browser.',
+  'windows-debloater': 'A safe GUI-to-script generator for Windows optimization. Select debloat modules—telemetry removal, bloatware uninstalls, Cortana disable, network tweaks—and download a custom PowerShell script. PIXEL.TOOLS never executes system commands from the browser.',
 };
 
 /* ── INJECT TOOL DESCRIPTION ── */

@@ -34,7 +34,27 @@ const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID';
 const GOOGLE_CLIENT_ID = '123456789-youractualid.apps.googleusercontent.com';
 ```
 
-### Step 3 — Serve the files
+### Step 3 — Connect Supabase (optional, for Phase 2 tools)
+
+Tools like **Content Wizard** save rows to `content_history`; several tools log opens to `tool_usage_logs`.
+
+1. Create a project at [supabase.com](https://supabase.com) (this repo targets project **myTools**).
+2. Copy `pixel-dashboard/.env.local.example` → `pixel-dashboard/.env.local`.
+3. From **Project Settings → API**, paste:
+   - **Project URL** → `SUPABASE_URL`
+   - **anon public** or **publishable** key → `SUPABASE_ANON_KEY`
+4. **Never** put `service_role` or secret keys in `.env.local` — browser-only keys with RLS.
+5. Schema is in `supabase/phase1-schema.sql` (already applied if you use the linked project).
+6. From repo root:
+
+```bash
+npm run sync:supabase
+npm run dev
+```
+
+`sync:supabase` writes gitignored `js/supabase-secrets.js` for the static app.
+
+### Step 4 — Serve the files
 
 > ⚠️ You **cannot** open `index.html` directly as a `file://` URL — Google OAuth requires an HTTP origin.
 
