@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en" class="dashboard-page">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIXEL.TOOLS — Dashboard</title>
+  <meta name="description" content="Everyday Web Utilities Dashboard — Your retro 8-bit toolbox.">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#39ff14">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PIXEL">
+  <link rel="icon" href="img/icon-192.png" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="img/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap" rel="stylesheet">
+  <script src="js/theme-bootstrap.js"></script>
+  <link rel="stylesheet" href="css/pixel.css">
+  <style>
+    /* ── LAYOUT (full viewport — no bottom footer deck) ── */
+    html.dashboard-page,
+    body.dashboard-page {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    #dash-page {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    #app {
+      display: flex;
+      flex: 1 1 auto;
+      align-items: stretch;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    /* ── SIDEBAR ── */
+    #sidebar {
+      width: 220px;
+      min-width: 220px;
+      background: var(--dark);
+      border-right: 4px solid var(--green);
+      display: flex;
+      flex-direction: column;
+      align-self: stretch;
+      height: 100%;
+      max-height: 100%;
+      overflow-y: auto;
+      z-index: 100;
+      flex-shrink: 0;
+    }
+
+    #sidebar-logo {
+      padding: 16px 12px;
+      border-bottom: 3px solid var(--green);
+      text-align: center;
+    }
+
+    #sidebar-logo .logo-text {
+      font-family: var(--font-pixel);
+      font-size: 10px;
+      color: var(--green);
+      display: block;
+      text-shadow: 0 0 8px var(--green);
+      line-height: 2;
+    }
+
+    #sidebar-logo .logo-ver {
+      font-family: var(--font-vt);
+      font-size: 14px;
+      color: var(--gray-light);
+    }
+
+    #nav-list {
+      list-style: none;
+      padding: 8px 0;
+      flex: 1;
+    }
+
+    #nav-list li {
+      border-bottom: 2px solid var(--dark3);
+    }
+
+    #nav-list li button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      background: none;
+      border: none;
+      color: var(--gray-light);
+      font-family: var(--font-pixel);
+      font-size: 7px;
+      padding: 12px 14px;
+      cursor: pointer;
+      text-align: left;
+      letter-spacing: 0.5px;
+      outline: none;
+      text-transform: uppercase;
+    }
+
+    #nav-list li button:hover {
+      background: var(--dark3);
+      color: var(--yellow);
+    }
+
+    #nav-list li.active button {
+      background: var(--green-dark);
+      color: var(--green);
+      border-left: 4px solid var(--green);
+    }
+
+    .nav-icon {
+      font-family: var(--font-vt);
+      font-size: 20px;
+      width: 22px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .nav-category {
+      font-family: var(--font-pixel);
+      font-size: 6px;
+      color: var(--gray);
+      padding: 12px 14px 4px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Pomodoro mini indicator in sidebar */
+    #sidebar-pomodoro-mini {
+      padding: 8px 14px;
+      border-top: 2px solid var(--gray);
+      font-family: var(--font-pixel);
+      font-size: 7px;
+      color: var(--pink);
+      display: none;
+    }
+
+    /* ── MAIN AREA ── */
+    #main {
+      position: relative;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    /* ── HEADER ── */
+    #dash-header {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      background: var(--dark);
+      border-bottom: 4px solid var(--green);
+      flex-shrink: 0;
+    }
+
+    #header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    #breadcrumb {
+      font-family: var(--font-pixel);
+      font-size: 8px;
+      color: var(--gray-light);
+    }
+
+    #breadcrumb span { color: var(--green); }
+
+    #header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    #user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #user-name {
+      font-family: var(--font-pixel);
+      font-size: 7px;
+      color: var(--green);
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    #user-email {
+      font-family: var(--font-vt);
+      font-size: 14px;
+      color: var(--gray-light);
+    }
+
+    #clock {
+      font-family: var(--font-pixel);
+      font-size: 9px;
+      color: var(--blue);
+      letter-spacing: 2px;
+      min-width: 90px;
+      text-align: right;
+    }
+
+    /* ── TOOL AREA ── */
+    #tool-area {
+      position: relative;
+      z-index: 1;
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: 24px;
+      padding-bottom: 16px;
+      background: var(--tool-area-bg, var(--black));
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tool-panel {
+      display: none;
+      animation: none;
+    }
+
+    .tool-panel.active {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+
+    /* ── HOME PANEL — grid fills remaining viewport ── */
+    #tool-home.tool-panel.active {
+      min-height: 100%;
+    }
+
+    #tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 16px;
+      flex: 1 1 auto;
+      align-content: start;
+      min-height: 0;
+    }
+
+    .tool-card {
+      border: 3px solid var(--gray);
+      background: var(--dark);
+      padding: 20px 16px;
+      cursor: pointer;
+      text-align: center;
+      box-shadow: 4px 4px 0 var(--dark2);
+    }
+
+    .tool-card:hover {
+      border-color: var(--green);
+      box-shadow: 4px 4px 0 var(--green-dim);
+    }
+
+    .tool-card:active {
+      transform: translate(4px, 4px);
+      box-shadow: 0 0 0 var(--green-dim);
+    }
+
+    .tool-card .tc-icon {
+      font-family: var(--font-vt);
+      font-size: 40px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .tool-card .tc-name {
+      font-family: var(--font-pixel);
+      font-size: 7px;
+      color: var(--green);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .tool-card .tc-desc {
+      font-family: var(--font-vt);
+      font-size: 16px;
+      color: var(--gray-light);
+    }
+
+    .tool-card.cat-net  { border-color: var(--blue); }
+    .tool-card.cat-net:hover { border-color: var(--blue); box-shadow: 4px 4px 0 var(--blue-dim); }
+    .tool-card.cat-net:active { box-shadow: 0 0 0 var(--blue-dim); }
+
+    .tool-card.cat-content { border-color: var(--pink); }
+    .tool-card.cat-content:hover { border-color: var(--pink); box-shadow: 4px 4px 0 var(--pink-dim); }
+    .tool-card.cat-content:active { box-shadow: 0 0 0 var(--pink-dim); }
+
+    .tool-card.cat-prod { border-color: var(--yellow); }
+    .tool-card.cat-prod:hover { border-color: var(--yellow); box-shadow: 4px 4px 0 var(--yellow-dim); }
+    .tool-card.cat-prod:active { box-shadow: 0 0 0 var(--yellow-dim); }
+
+    /* ── STATUS BAR (compact) ── */
+    #status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2px 10px;
+      min-height: 18px;
+      background: var(--dark);
+      border-top: 2px solid var(--green);
+      font-family: var(--font-pixel);
+      font-size: 5px;
+      color: var(--gray-light);
+      flex-shrink: 0;
+      letter-spacing: 0.5px;
+    }
+
+    /* Mobile sidebar toggle */
+    #sidebar-toggle {
+      display: none;
+      background: none;
+      border: 2px solid var(--green);
+      color: var(--green);
+      font-family: var(--font-pixel);
+      font-size: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      #sidebar {
+        position: fixed;
+        left: -224px;
+        top: 0;
+        height: 100%;
+        max-height: none;
+        align-self: auto;
+        transition: none;
+        z-index: 1000;
+      }
+      #sidebar.open { left: 0; box-shadow: 4px 0 0 var(--green); }
+      #sidebar-toggle { display: block; }
+
+      /* Header — prevent overflow; no fixed overlays blocking content */
+      #dash-header { padding: 8px 12px; gap: 6px; flex-wrap: wrap; }
+      #breadcrumb  { font-size: 6px; flex: 1 1 100%; order: 2; }
+      #header-left { flex: 1; min-width: 0; }
+      #user-email  { display: none; }
+      #user-name   { max-width: 72px; font-size: 6px; }
+      #clock       { display: none; }
+      #header-right { gap: 4px; flex-shrink: 0; }
+      #theme-toggle { display: none; }
+
+      /* Tool area */
+      #tool-area { padding: 12px; padding-bottom: 24px; overflow-x: hidden; }
+
+      /* Tool grid smaller min for narrow screens */
+      #tool-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+
+      /* Status bar — drop middle item */
+      #status-tool { display: none; }
+
+      /* Toasts: bottom stack so they don't clog the top bar */
+      body.dashboard-page #px-toast-container {
+        top: auto;
+        bottom: 12px;
+        left: 12px;
+        right: 12px;
+        align-items: stretch;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .px-avatar   { display: none; }
+      #user-name   { max-width: 64px; }
+      #dash-header .px-btn-red { padding: 4px 6px; font-size: 6px; }
+
+      /* Home stats: 2-col grid instead of flex row */
+      #home-stats-row { display: grid !important; grid-template-columns: 1fr 1fr; gap: 8px; }
+      #home-stats-row > div { min-width: 0 !important; }
+
+      /* Tool grid: 2-col on narrow */
+      #tool-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body class="dashboard-page">
+
+<div id="dash-page">
+
+<div class="dash-viewport-decor" aria-hidden="true">
+  <svg class="dash-corner dash-corner--tl" viewBox="0 0 32 32" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+    <path d="M4 4h10v3H7v17H4V4z" fill="none" stroke="var(--green)" stroke-width="2"/>
+    <path d="M4 4h3v10H4V4z" fill="var(--green)" opacity="0.5"/>
+  </svg>
+  <svg class="dash-corner dash-corner--tr" viewBox="0 0 32 32" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+    <rect x="10" y="6" width="4" height="4" fill="var(--pink)"/>
+    <rect x="14" y="6" width="4" height="4" fill="var(--pink)"/>
+    <rect x="8" y="10" width="4" height="4" fill="var(--pink)"/>
+    <rect x="12" y="10" width="8" height="4" fill="var(--pink)"/>
+    <rect x="10" y="14" width="12" height="4" fill="var(--pink)"/>
+    <rect x="8" y="18" width="4" height="4" fill="var(--pink)"/>
+    <rect x="18" y="18" width="4" height="4" fill="var(--pink)"/>
+  </svg>
+  <svg class="dash-corner dash-corner--bl" viewBox="0 0 32 32" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+    <rect x="6" y="8" width="20" height="18" fill="var(--dark3)" stroke="var(--blue)" stroke-width="2"/>
+    <rect x="6" y="8" width="8" height="6" fill="var(--black)" stroke="var(--blue)" stroke-width="2"/>
+    <rect x="10" y="14" width="12" height="2" fill="var(--blue)" opacity="0.6"/>
+    <rect x="22" y="22" width="4" height="4" fill="var(--yellow)" opacity="0.8"/>
+  </svg>
+  <svg class="dash-corner dash-corner--br" viewBox="0 0 32 32" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+    <path d="M28 4H18v3h7v17h3V4z" fill="none" stroke="var(--yellow)" stroke-width="2"/>
+    <path d="M25 4h3v10h-3V4z" fill="var(--yellow)" opacity="0.5"/>
+    <rect x="20" y="20" width="3" height="3" fill="var(--green)" opacity="0.7"/>
+    <rect x="24" y="22" width="3" height="3" fill="var(--green)" opacity="0.5"/>
+  </svg>
+</div>
+
+<div id="app">
+
+  <!-- ── SIDEBAR ── -->
+  <nav id="sidebar">
+    <div id="sidebar-logo">
+      <span class="logo-text">PIXEL.TOOLS</span>
+      <span class="logo-ver">v1.0.0</span>
+    </div>
+
+    <ul id="nav-list">
+      <li class="active" data-tool="home">
+        <button onclick="switchTool('home')">
+          <span class="nav-icon">⌂</span> <span data-i18n="nav_home">HOME</span>
+        </button>
+      </li>
+
+      <li><div class="nav-category" data-i18n="nav_cat_network">— NETWORK —</div></li>
+      <li data-tool="ipgeo">
+        <button onclick="switchTool('ipgeo')">
+          <span class="nav-icon text-blue">◈</span> <span data-i18n="tool_ipgeo">IP GEOLOCATE</span>
+        </button>
+      </li>
+      <li data-tool="subnet">
+        <button onclick="switchTool('subnet')">
+          <span class="nav-icon text-blue">⊞</span> <span data-i18n="tool_subnet">SUBNET CALC</span>
+        </button>
+      </li>
+      <li data-tool="ping">
+        <button onclick="switchTool('ping')">
+          <span class="nav-icon text-blue">◎</span> <span data-i18n="tool_ping">PING SIM</span>
+        </button>
+      </li>
+
+      <li><div class="nav-category" data-i18n="nav_cat_content">— CONTENT —</div></li>
+      <li data-tool="base64">
+        <button onclick="switchTool('base64')">
+          <span class="nav-icon text-pink">⇄</span> <span data-i18n="tool_base64">BASE64 / URL</span>
+        </button>
+      </li>
+      <li data-tool="palette">
+        <button onclick="switchTool('palette')">
+          <span class="nav-icon text-pink">▣</span> <span data-i18n="tool_palette">PALETTE GEN</span>
+        </button>
+      </li>
+      <li data-tool="texttools">
+        <button onclick="switchTool('texttools')">
+          <span class="nav-icon text-pink">Aa</span> <span data-i18n="tool_texttools">TEXT TOOLS</span>
+        </button>
+      </li>
+
+      <li><div class="nav-category" data-i18n="nav_cat_productivity">— PRODUCTIVITY —</div></li>
+      <li data-tool="todo">
+        <button onclick="switchTool('todo')">
+          <span class="nav-icon text-yellow">☑</span> <span data-i18n="tool_todo">TODO LIST</span>
+        </button>
+      </li>
+      <li data-tool="pomodoro">
+        <button onclick="switchTool('pomodoro')">
+          <span class="nav-icon text-yellow">◷</span> <span data-i18n="tool_pomodoro">POMODORO</span>
+        </button>
+      </li>
+      <li data-tool="jsonformat">
+        <button onclick="switchTool('jsonformat')">
+          <span class="nav-icon text-yellow">{}</span> <span data-i18n="tool_jsonformat">JSON FORMAT</span>
+        </button>
+      </li>
+
+      <li><div class="nav-category" data-i18n="nav_cat_ai">— AI TOOLS —</div></li>
+      <li data-tool="ai-ctx">
+        <button onclick="switchTool('ai-ctx')">
+          <span class="nav-icon text-orange">⬡</span> <span data-i18n="tool_ai_ctx">AI CTX OPT</span>
+        </button>
+      </li>
+      <li data-tool="micro-digest">
+        <button onclick="switchTool('micro-digest')">
+          <span class="nav-icon text-orange">⊟</span> <span data-i18n="tool_micro_digest">MICRO-DIGEST</span>
+        </button>
+      </li>
+      <li data-tool="content-wiz">
+        <button onclick="switchTool('content-wiz')">
+          <span class="nav-icon text-orange">⇌</span> <span data-i18n="tool_content_wiz">CONTENT WIZARD</span>
+        </button>
+      </li>
+
+      <li><div class="nav-category" data-i18n="nav_cat_media">— MEDIA —</div></li>
+      <li data-tool="hd-format">
+        <button onclick="switchTool('hd-format')">
+          <span class="nav-icon text-pink">⬆</span> <span data-i18n="tool_hd_format">HD FORMAT</span>
+        </button>
+      </li>
+      <li data-tool="stem-sep">
+        <button onclick="switchTool('stem-sep')">
+          <span class="nav-icon text-blue">♪</span> <span data-i18n="tool_stem_sep">STEM SEPARATOR</span>
+        </button>
+      </li>
+      <li data-tool="loudness">
+        <button onclick="switchTool('loudness')">
+          <span class="nav-icon text-blue">≋</span> <span data-i18n="tool_loudness">LOUDNESS MATCH</span>
+        </button>
+      </li>
+
+      <li><div class="nav-category" data-i18n="nav_cat_system">— SYSTEM —</div></li>
+      <li data-tool="windows-debloater">
+        <button onclick="switchTool('windows-debloater')">
+          <span class="nav-icon text-green">⊠</span> <span data-i18n="tool_windows_debloater">WIN DEBLOATER</span>
+        </button>
+      </li>
+    </ul>
+
+    <div id="sidebar-pomodoro-mini" id="pomo-sidebar">
+      ◷ <span id="pomo-sidebar-time">00:00</span>
+    </div>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <main id="main">
+
+    <!-- Header -->
+    <header id="dash-header">
+      <div id="header-left">
+        <button id="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+        <div id="breadcrumb">PIXEL.TOOLS &gt; <span id="breadcrumb-tool">HOME</span></div>
+      </div>
+      <div id="header-right">
+        <div id="clock">00:00:00</div>
+        <button type="button" id="dash-settings-btn"
+                class="px-settings-trigger px-settings-trigger--header"
+                aria-expanded="false"
+                aria-controls="px-settings-modal"
+                data-i18n-title="settings_btn"
+                data-i18n-aria="settings_aria"
+                title="Settings">&#9881;</button>
+        <div id="user-info">
+          <div>
+            <div id="user-name">LOADING...</div>
+            <div id="user-email"></div>
+          </div>
+          <div class="px-avatar">
+            <img id="user-avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%231a1a1a'/%3E%3Ctext x='50%25' y='55%25' text-anchor='middle' dominant-baseline='middle' font-size='20' fill='%2339ff14'%3E?%3C/text%3E%3C/svg%3E" alt="avatar">
+          </div>
+          <button class="px-btn px-btn-sm px-btn-red" id="dash-logout-btn" onclick="handleSignOut()" data-i18n="logout_btn">LOGOUT</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Tool Area -->
+    <div id="tool-area">
+
+      <!-- HOME -->
+      <div id="tool-home" class="tool-panel active">
+        <!-- ARCADE HEADER -->
+        <div id="home-arcade-header">
+          <img src="img/arcade_header.png" alt="PIXEL.TOOLS Arcade" id="arcade-header-img">
+          <div id="arcade-header-overlay">
+            <span class="arcade-title-text">PIXEL.TOOLS</span>
+            <span class="arcade-subtitle-text" data-i18n="arcade_subtitle">// YOUR RETRO WEB TOOLBOX //</span>
+          </div>
+        </div>
+
+        <div class="tool-header">
+          <h2 data-i18n="home_command_title">▸ COMMAND CENTER</h2>
+          <p data-i18n="home_command_desc">Select a tool from the sidebar or the grid below. PLAYER ONE, START!</p>
+        </div>
+
+        <div id="home-stats-row" style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
+          <div class="px-box" style="flex:1;min-width:140px;">
+            <div class="px-label" data-i18n="welcome">WELCOME BACK</div>
+            <div style="font-family:var(--font-pixel);font-size:10px;color:var(--green);" id="home-username">PLAYER ONE</div>
+            <div style="font-family:var(--font-vt);font-size:17px;color:var(--gray-light);margin-top:4px;" id="home-email"></div>
+          </div>
+          <div class="px-box-pink" style="flex:1;min-width:120px;text-align:center;">
+            <div class="px-label" data-i18n="tools_available">TOOLS AVAILABLE</div>
+            <div style="font-family:var(--font-pixel);font-size:28px;color:var(--pink);">16</div>
+          </div>
+          <div class="px-box-blue" style="flex:1;min-width:120px;text-align:center;">
+            <div class="px-label" data-i18n="todays_date">TODAY'S DATE</div>
+            <div style="font-family:var(--font-pixel);font-size:11px;color:var(--blue);" id="home-date">--</div>
+          </div>
+          <div class="px-box-yellow" style="flex:1;min-width:120px;text-align:center;">
+            <div class="px-label" data-i18n="todo_streak">TODO STREAK</div>
+            <div style="font-family:var(--font-pixel);font-size:24px;color:var(--yellow);" id="home-streak">0</div>
+            <div style="font-family:var(--font-vt);font-size:16px;color:var(--gray-light);" data-i18n="days">DAYS</div>
+          </div>
+        </div>
+
+        <div id="tool-grid">
+          <div class="tool-card cat-net" onclick="switchTool('ipgeo')">
+            <span class="tc-icon text-blue">◈</span>
+            <span class="tc-name" data-i18n="tool_ipgeo">IP GEOLOCATE</span>
+            <span class="tc-desc" data-i18n="tool_ipgeo_desc">Lookup IP info</span>
+          </div>
+          <div class="tool-card cat-net" onclick="switchTool('subnet')">
+            <span class="tc-icon text-blue">⊞</span>
+            <span class="tc-name" data-i18n="tool_subnet">SUBNET CALC</span>
+            <span class="tc-desc" data-i18n="tool_subnet_desc">CIDR network tool</span>
+          </div>
+          <div class="tool-card cat-net" onclick="switchTool('ping')">
+            <span class="tc-icon text-blue">◎</span>
+            <span class="tc-name" data-i18n="tool_ping">PING SIM</span>
+            <span class="tc-desc" data-i18n="tool_ping_desc">HTTP latency test</span>
+          </div>
+          <div class="tool-card cat-content" onclick="switchTool('base64')">
+            <span class="tc-icon text-pink">⇄</span>
+            <span class="tc-name" data-i18n="tool_base64">BASE64 / URL</span>
+            <span class="tc-desc" data-i18n="tool_base64_desc">Encode & decode</span>
+          </div>
+          <div class="tool-card cat-content" onclick="switchTool('palette')">
+            <span class="tc-icon text-pink">▣</span>
+            <span class="tc-name" data-i18n="tool_palette">PALETTE GEN</span>
+            <span class="tc-desc" data-i18n="tool_palette_desc">8-bit color palettes</span>
+          </div>
+          <div class="tool-card cat-content" onclick="switchTool('texttools')">
+            <span class="tc-icon text-pink">Aa</span>
+            <span class="tc-name" data-i18n="tool_texttools">TEXT TOOLS</span>
+            <span class="tc-desc" data-i18n="tool_texttools_desc">Case &amp; regex</span>
+          </div>
+          <div class="tool-card cat-prod" onclick="switchTool('todo')">
+            <span class="tc-icon text-yellow">☑</span>
+            <span class="tc-name" data-i18n="tool_todo">TODO LIST</span>
+            <span class="tc-desc" data-i18n="tool_todo_desc">Tasks + streaks</span>
+          </div>
+          <div class="tool-card cat-prod" onclick="switchTool('pomodoro')">
+            <span class="tc-icon text-yellow">◷</span>
+            <span class="tc-name" data-i18n="tool_pomodoro">POMODORO</span>
+            <span class="tc-desc" data-i18n="tool_pomodoro_desc">Focus timer</span>
+          </div>
+          <div class="tool-card cat-prod" onclick="switchTool('jsonformat')">
+            <span class="tc-icon text-yellow">{}</span>
+            <span class="tc-name" data-i18n="tool_jsonformat">JSON FORMAT</span>
+            <span class="tc-desc" data-i18n="tool_jsonformat_desc">Validate &amp; pretty</span>
+          </div>
+
+          <!-- ── AI TOOLS ── -->
+          <div class="tool-card cat-ai" onclick="switchTool('ai-ctx')">
+            <span class="tc-icon text-orange">⬡</span>
+            <span class="tc-name" data-i18n="tool_ai_ctx">AI CTX OPT</span>
+            <span class="tc-desc" data-i18n="tool_ai_ctx_desc">LLM token trimmer</span>
+          </div>
+          <div class="tool-card cat-ai" onclick="switchTool('micro-digest')">
+            <span class="tc-icon text-orange">⊟</span>
+            <span class="tc-name" data-i18n="tool_micro_digest">MICRO-DIGEST</span>
+            <span class="tc-desc" data-i18n="tool_micro_digest_desc">Instant doc summary</span>
+          </div>
+          <div class="tool-card cat-ai" onclick="switchTool('content-wiz')">
+            <span class="tc-icon text-orange">⇌</span>
+            <span class="tc-name" data-i18n="tool_content_wiz">CONTENT WIZARD</span>
+            <span class="tc-desc" data-i18n="tool_content_wiz_desc">Multi-format repost</span>
+          </div>
+
+          <!-- ── MEDIA TOOLS ── -->
+          <div class="tool-card cat-visual" onclick="switchTool('hd-format')">
+            <span class="tc-icon text-pink">⬆</span>
+            <span class="tc-name" data-i18n="tool_hd_format">HD FORMAT</span>
+            <span class="tc-desc" data-i18n="tool_hd_format_desc">WebGPU/WASM upscale</span>
+          </div>
+          <div class="tool-card cat-audio" onclick="switchTool('stem-sep')">
+            <span class="tc-icon text-blue">♪</span>
+            <span class="tc-name" data-i18n="tool_stem_sep">STEM SEPARATOR</span>
+            <span class="tc-desc" data-i18n="tool_stem_sep_desc">ONNX vocal splitter</span>
+          </div>
+          <div class="tool-card cat-audio" onclick="switchTool('loudness')">
+            <span class="tc-icon text-blue">≋</span>
+            <span class="tc-name" data-i18n="tool_loudness">LOUDNESS MATCH</span>
+            <span class="tc-desc" data-i18n="tool_loudness_desc">Spotify/YT normalize</span>
+          </div>
+
+          <!-- ── SYSTEM TOOLS ── -->
+          <div class="tool-card cat-system" onclick="switchTool('windows-debloater')">
+            <span class="tc-icon text-green">⊠</span>
+            <span class="tc-name" data-i18n="tool_windows_debloater">WIN DEBLOATER</span>
+            <span class="tc-desc" data-i18n="tool_windows_debloater_desc">GUI → PowerShell .ps1</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- IP GEOLOCATION -->
+      <div id="tool-ipgeo" class="tool-panel"></div>
+
+      <!-- SUBNET CALCULATOR -->
+      <div id="tool-subnet" class="tool-panel"></div>
+
+      <!-- PING SIMULATOR -->
+      <div id="tool-ping" class="tool-panel"></div>
+
+      <!-- BASE64 -->
+      <div id="tool-base64" class="tool-panel"></div>
+
+      <!-- PALETTE GENERATOR -->
+      <div id="tool-palette" class="tool-panel"></div>
+
+      <!-- TEXT TOOLS -->
+      <div id="tool-texttools" class="tool-panel"></div>
+
+      <!-- TODO LIST -->
+      <div id="tool-todo" class="tool-panel"></div>
+
+      <!-- POMODORO -->
+      <div id="tool-pomodoro" class="tool-panel"></div>
+
+      <!-- JSON FORMATTER -->
+      <div id="tool-jsonformat" class="tool-panel"></div>
+
+      <!-- AI / MEDIA TOOLS -->
+      <div id="tool-ai-ctx"      class="tool-panel"><div class="tool-header"><h2>⬡ AI CTX OPTIMIZER</h2><p>Intelligent code trimmer for LLM token efficiency.</p></div></div>
+      <div id="tool-micro-digest" class="tool-panel"><div class="tool-header"><h2>⊟ MICRO-DIGEST ENGINE</h2><p>Instant document summaries — 100% client-side.</p></div></div>
+      <div id="tool-content-wiz"  class="tool-panel"><div class="tool-header"><h2>⇌ CONTENT WIZARD</h2><p>Convert a single idea to multiple social formats.</p></div></div>
+      <div id="tool-hd-format"    class="tool-panel"><div class="tool-header"><h2>⬆ HD FORMAT</h2><p>Local image upscale preview via canvas.</p></div></div>
+      <div id="tool-stem-sep"     class="tool-panel"><div class="tool-header"><h2>♪ STEM SEPARATOR</h2><p>Vocal &amp; instrument splitter — ONNX Web ready.</p></div></div>
+      <div id="tool-loudness"     class="tool-panel"><div class="tool-header"><h2>≋ LOUDNESS MATCHER</h2><p>Normalize to -14 LUFS via Web Audio API.</p></div></div>
+
+      <!-- WINDOWS DEBLOATER -->
+      <div id="tool-windows-debloater" class="tool-panel">
+        <div class="tool-header">
+          <h2>⊠ WINDOWS DEBLOATER</h2>
+          <p>GUI to Script — build a custom optimizer .ps1 from your selections. Nothing runs in the browser.</p>
+        </div>
+        <div id="debloat-root">
+          <div class="px-box debloat-grid-panel" style="border-color:var(--green);">
+            <div class="px-label">▸ OPTIMIZATION MODULES</div>
+            <p style="font-family:var(--font-vt);font-size:17px;color:var(--gray-light);margin-top:8px;line-height:1.4;">
+              Toggle modules below. GENERATE OPTIMIZER downloads <span style="color:var(--green);">debloat_optimizer.ps1</span> for manual review in elevated PowerShell.
+            </p>
+            <div class="debloat-grid" role="group" aria-label="Debloat modules">
+              <label class="debloat-option" for="debloat-opt-telemetry">
+                <input type="checkbox" id="debloat-opt-telemetry" checked>
+                <span>REMOVE WINDOWS TELEMETRY</span>
+              </label>
+              <label class="debloat-option" for="debloat-opt-bloatware">
+                <input type="checkbox" id="debloat-opt-bloatware" checked>
+                <span>UNINSTALL BLOATWARE APPS</span>
+              </label>
+              <label class="debloat-option" for="debloat-opt-cortana">
+                <input type="checkbox" id="debloat-opt-cortana">
+                <span>DISABLE CORTANA</span>
+              </label>
+              <label class="debloat-option" for="debloat-opt-network">
+                <input type="checkbox" id="debloat-opt-network">
+                <span>OPTIMIZE NETWORK LATENCY</span>
+              </label>
+            </div>
+            <div class="debloat-generate-wrap">
+              <button type="button" class="px-btn px-btn-lg" id="debloat-generate">GENERATE OPTIMIZER</button>
+            </div>
+          </div>
+          <div id="debloat-status" class="px-box mt-12" style="border-color:var(--gray);margin-top:16px;">
+            <div class="px-label">STATUS</div>
+            <div id="debloat-status-text" style="font-family:var(--font-vt);font-size:18px;color:var(--gray-light);line-height:1.5;">
+              CHECK MODULES AND PRESS GENERATE OPTIMIZER — output is a local .ps1 download only.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Status bar -->
+    <div id="status-bar">
+      <span>PIXEL.TOOLS v1.0.0</span>
+      <span id="status-tool">TOOL: HOME</span>
+      <span id="status-mem">MEM: OK</span>
+    </div>
+
+  </main>
+</div>
+
+</div><!-- /#dash-page -->
+
+<!-- Unified settings modal injected by lang_unified.js (PixelSettings) -->
+
+<!-- Toast container -->
+<div id="px-toast-container"></div>
+
+<!-- Scripts — lang first, then config, then core -->
+<script src="js/i18n-dashboard.js"></script>
+<script src="js/pixel-theme.js"></script>
+<script src="js/lang_unified.js"></script>
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/store.js"></script>
+<script src="js/notifications.js"></script>
+
+<!-- Tool scripts -->
+<script src="js/tools/ipgeo.js"></script>
+<script src="js/tools/subnet.js"></script>
+<script src="js/tools/ping.js"></script>
+<script src="js/tools/base64.js"></script>
+<script src="js/tools/palette.js"></script>
+<script src="js/tools/texttools.js"></script>
+<script src="js/tools/todo.js"></script>
+<script src="js/tools/pomodoro.js"></script>
+<script src="js/tools/json-formatter.js"></script>
+<script src="js/tools/ai-ctx.js"></script>
+<script src="js/components/retro-file-input.js"></script>
+<script src="js/tools/micro-digest.js"></script>
+<script src="js/tools/content-wiz.js"></script>
+<script src="js/tools/hd-format.js"></script>
+<script src="js/tools/stem-sep.js"></script>
+<script src="js/tools/loudness.js"></script>
+<script src="js/tools/windows-debloater.js"></script>
+
+<!-- Dashboard controller -->
+<script src="js/dashboard.js"></script>
+<script src="js/pwa-register.js"></script>
+</body>
+</html>
