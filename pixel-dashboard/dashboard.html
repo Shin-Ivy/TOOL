@@ -14,6 +14,8 @@
     (function(){
       var t = localStorage.getItem('pixel_theme') || 'dark';
       document.documentElement.setAttribute('data-theme', t);
+      var l = localStorage.getItem('pixel_lang') || localStorage.getItem('savedLanguage');
+      if (l === 'id') document.documentElement.lang = 'id';
     })();
   </script>
   <style>
@@ -508,7 +510,13 @@
       </div>
       <div id="header-right">
         <div id="clock">00:00:00</div>
-        <!-- Theme toggle -->
+        <button type="button" id="dash-settings-btn"
+                class="px-settings-trigger px-settings-trigger--header"
+                aria-expanded="false"
+                aria-controls="px-settings-modal"
+                data-i18n-title="settings_btn"
+                data-i18n-aria="settings_aria"
+                title="Settings">&#9881;</button>
         <button id="theme-toggle" onclick="toggleTheme()" title="TOGGLE THEME">☀</button>
         <div id="user-info">
           <div>
@@ -795,11 +803,6 @@
 
 </div><!-- /#dash-page -->
 
-<!-- Dashboard settings — viewport bottom-right -->
-<button type="button" id="dash-settings-fab" class="dash-settings-fab"
-        aria-expanded="false" aria-controls="px-settings-modal"
-        onclick="PixelSettings.toggle()">&#9881; SETTINGS</button>
-
 <!-- Unified settings modal injected by lang_unified.js (PixelSettings) -->
 
 <!-- Toast container -->
@@ -857,13 +860,6 @@ function toggleTheme() {
   if (icon) icon.textContent = t === 'light' ? '\u263E' : '\u2600';
 })();
 
-/* ══ Dashboard settings — delegate to unified PixelSettings ══ */
-function toggleDashSettings() { PixelSettings.toggle(); }
-function closeDashSettings()  { PixelSettings.close();  }
-
-document.addEventListener('keydown', function (e) {
-  if (e.key === 'Escape') closeDashSettings();
-});
 </script>
 
 </body>
