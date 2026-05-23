@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dashboard-page">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,13 +17,26 @@
     })();
   </script>
   <style>
-    /* ── LAYOUT ── */
-    html, body { height: 100%; overflow: hidden; }
+    /* ── LAYOUT (document scroll — footer at page bottom) ── */
+    html.dashboard-page,
+    body.dashboard-page {
+      height: auto;
+      min-height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    #dash-page {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
 
     #app {
       display: flex;
-      height: 100vh;
-      overflow: hidden;
+      flex: 1 0 auto;
+      align-items: stretch;
+      min-height: 0;
     }
 
     /* ── SIDEBAR ── */
@@ -34,9 +47,14 @@
       border-right: 4px solid var(--green);
       display: flex;
       flex-direction: column;
-      height: 100%;
+      position: sticky;
+      top: 0;
+      align-self: flex-start;
+      height: 100vh;
+      max-height: 100vh;
       overflow-y: auto;
       z-index: 100;
+      flex-shrink: 0;
     }
 
     #sidebar-logo {
@@ -131,7 +149,9 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
+      min-width: 0;
+      min-height: 100vh;
+      overflow: visible;
     }
 
     /* ── HEADER ── */
@@ -198,9 +218,10 @@
 
     /* ── TOOL AREA ── */
     #tool-area {
-      flex: 1;
-      overflow-y: auto;
+      flex: 1 0 auto;
+      overflow: visible;
       padding: 24px;
+      padding-bottom: 32px;
       background: var(--tool-area-bg, var(--black));
     }
 
@@ -273,18 +294,20 @@
     .tool-card.cat-prod:hover { border-color: var(--yellow); box-shadow: 4px 4px 0 var(--yellow-dim); }
     .tool-card.cat-prod:active { box-shadow: 0 0 0 var(--yellow-dim); }
 
-    /* ── STATUS BAR ── */
+    /* ── STATUS BAR (compact) ── */
     #status-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 4px 16px;
+      padding: 2px 10px;
+      min-height: 18px;
       background: var(--dark);
-      border-top: 3px solid var(--green);
+      border-top: 2px solid var(--green);
       font-family: var(--font-pixel);
-      font-size: 6px;
+      font-size: 5px;
       color: var(--gray-light);
       flex-shrink: 0;
+      letter-spacing: 0.5px;
     }
 
     /* Mobile sidebar toggle */
@@ -305,35 +328,47 @@
         left: -224px;
         top: 0;
         height: 100%;
+        max-height: none;
+        align-self: auto;
         transition: none;
         z-index: 1000;
       }
       #sidebar.open { left: 0; box-shadow: 4px 0 0 var(--green); }
       #sidebar-toggle { display: block; }
 
-      /* Header — prevent overflow */
-      #dash-header { padding: 8px 12px; gap: 6px; }
-      #breadcrumb  { font-size: 6px; }
+      /* Header — prevent overflow; no fixed overlays blocking content */
+      #dash-header { padding: 8px 12px; gap: 6px; flex-wrap: wrap; }
+      #breadcrumb  { font-size: 6px; flex: 1 1 100%; order: 2; }
+      #header-left { flex: 1; min-width: 0; }
       #user-email  { display: none; }
-      #user-name   { max-width: 80px; font-size: 6px; }
-      #clock       { font-size: 7px; letter-spacing: 1px; min-width: 70px; }
-      #header-right { gap: 6px; }
+      #user-name   { max-width: 72px; font-size: 6px; }
+      #clock       { display: none; }
+      #header-right { gap: 4px; flex-shrink: 0; }
+      #theme-toggle { display: none; }
 
       /* Tool area */
-      #tool-area { padding: 12px; overflow-x: hidden; }
+      #tool-area { padding: 12px; padding-bottom: 24px; overflow-x: hidden; }
 
       /* Tool grid smaller min for narrow screens */
       #tool-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
 
       /* Status bar — drop middle item */
       #status-tool { display: none; }
+
+      /* Toasts: bottom stack so they don't clog the top bar */
+      body.dashboard-page #px-toast-container {
+        top: auto;
+        bottom: 12px;
+        left: 12px;
+        right: 12px;
+        align-items: stretch;
+      }
     }
 
     @media (max-width: 480px) {
-      /* Hide clock and avatar on very small screens */
-      #clock       { display: none; }
       .px-avatar   { display: none; }
-      #user-name   { max-width: 100px; }
+      #user-name   { max-width: 64px; }
+      #dash-header .px-btn-red { padding: 4px 6px; font-size: 6px; }
 
       /* Home stats: 2-col grid instead of flex row */
       #home-stats-row { display: grid !important; grid-template-columns: 1fr 1fr; gap: 8px; }
@@ -344,7 +379,9 @@
     }
   </style>
 </head>
-<body>
+<body class="dashboard-page">
+
+<div id="dash-page">
 
 <div id="app">
 
@@ -446,6 +483,13 @@
           <span class="nav-icon text-blue">≋</span> LOUDNESS
         </button>
       </li>
+
+      <li><div class="nav-category">— SYSTEM —</div></li>
+      <li data-tool="windows-debloater">
+        <button onclick="switchTool('windows-debloater')">
+          <span class="nav-icon text-green">⊠</span> WIN DEBLOAT
+        </button>
+      </li>
     </ul>
 
     <div id="sidebar-pomodoro-mini" id="pomo-sidebar">
@@ -506,7 +550,7 @@
           </div>
           <div class="px-box-pink" style="flex:1;min-width:120px;text-align:center;">
             <div class="px-label">TOOLS AVAILABLE</div>
-            <div style="font-family:var(--font-pixel);font-size:28px;color:var(--pink);">15</div>
+            <div style="font-family:var(--font-pixel);font-size:28px;color:var(--pink);">16</div>
           </div>
           <div class="px-box-blue" style="flex:1;min-width:120px;text-align:center;">
             <div class="px-label">TODAY'S DATE</div>
@@ -599,6 +643,13 @@
             <span class="tc-name">LOUDNESS MATCH</span>
             <span class="tc-desc">Spotify/YT normalize</span>
           </div>
+
+          <!-- ── SYSTEM TOOLS ── -->
+          <div class="tool-card cat-system" onclick="switchTool('windows-debloater')">
+            <span class="tc-icon text-green">⊠</span>
+            <span class="tc-name">WIN DEBLOATER</span>
+            <span class="tc-desc">GUI → PowerShell .ps1</span>
+          </div>
         </div>
       </div>
 
@@ -629,13 +680,56 @@
       <!-- JSON FORMATTER -->
       <div id="tool-jsonformat" class="tool-panel"></div>
 
-      <!-- AI / MEDIA TOOLS (coming soon panels) -->
-      <div id="tool-ai-ctx"      class="tool-panel"><div class="tool-header"><h2>⬡ AI CTX OPTIMIZER</h2><p>Intelligent code trimmer for LLM token efficiency. — COMING SOON</p></div></div>
-      <div id="tool-micro-digest" class="tool-panel"><div class="tool-header"><h2>⊟ MICRO-DIGEST ENGINE</h2><p>Unlimited instant document &amp; meeting summaries. — COMING SOON</p></div></div>
-      <div id="tool-content-wiz"  class="tool-panel"><div class="tool-header"><h2>⇌ CONTENT WIZARD</h2><p>Convert a single idea to multiple social formats. — COMING SOON</p></div></div>
-      <div id="tool-hd-format"    class="tool-panel"><div class="tool-header"><h2>⬆ HD FORMAT</h2><p>Local photo/video upscaler via WebGPU/WASM. — COMING SOON</p></div></div>
-      <div id="tool-stem-sep"     class="tool-panel"><div class="tool-header"><h2>♪ STEM SEPARATOR</h2><p>Free unlimited vocal &amp; instrument splitter (ONNX Web). — COMING SOON</p></div></div>
-      <div id="tool-loudness"     class="tool-panel"><div class="tool-header"><h2>≋ LOUDNESS MATCHER</h2><p>Auto Spotify/YouTube standard normalization via Web Audio API. — COMING SOON</p></div></div>
+      <!-- AI / MEDIA TOOLS -->
+      <div id="tool-ai-ctx"      class="tool-panel"><div class="tool-header"><h2>⬡ AI CTX OPTIMIZER</h2><p>Intelligent code trimmer for LLM token efficiency.</p></div></div>
+      <div id="tool-micro-digest" class="tool-panel"><div class="tool-header"><h2>⊟ MICRO-DIGEST ENGINE</h2><p>Instant document summaries — 100% client-side.</p></div></div>
+      <div id="tool-content-wiz"  class="tool-panel"><div class="tool-header"><h2>⇌ CONTENT WIZARD</h2><p>Convert a single idea to multiple social formats.</p></div></div>
+      <div id="tool-hd-format"    class="tool-panel"><div class="tool-header"><h2>⬆ HD FORMAT</h2><p>Local image upscale preview via canvas.</p></div></div>
+      <div id="tool-stem-sep"     class="tool-panel"><div class="tool-header"><h2>♪ STEM SEPARATOR</h2><p>Vocal &amp; instrument splitter — ONNX Web ready.</p></div></div>
+      <div id="tool-loudness"     class="tool-panel"><div class="tool-header"><h2>≋ LOUDNESS MATCHER</h2><p>Normalize to -14 LUFS via Web Audio API.</p></div></div>
+
+      <!-- WINDOWS DEBLOATER -->
+      <div id="tool-windows-debloater" class="tool-panel">
+        <div class="tool-header">
+          <h2>⊠ WINDOWS DEBLOATER</h2>
+          <p>GUI to Script — build a custom optimizer .ps1 from your selections. Nothing runs in the browser.</p>
+        </div>
+        <div id="debloat-root">
+          <div class="px-box debloat-grid-panel" style="border-color:var(--green);">
+            <div class="px-label">▸ OPTIMIZATION MODULES</div>
+            <p style="font-family:var(--font-vt);font-size:17px;color:var(--gray-light);margin-top:8px;line-height:1.4;">
+              Toggle modules below. GENERATE OPTIMIZER downloads <span style="color:var(--green);">debloat_optimizer.ps1</span> for manual review in elevated PowerShell.
+            </p>
+            <div class="debloat-grid" role="group" aria-label="Debloat modules">
+              <label class="debloat-option" for="debloat-opt-telemetry">
+                <input type="checkbox" id="debloat-opt-telemetry" checked>
+                <span>REMOVE WINDOWS TELEMETRY</span>
+              </label>
+              <label class="debloat-option" for="debloat-opt-bloatware">
+                <input type="checkbox" id="debloat-opt-bloatware" checked>
+                <span>UNINSTALL BLOATWARE APPS</span>
+              </label>
+              <label class="debloat-option" for="debloat-opt-cortana">
+                <input type="checkbox" id="debloat-opt-cortana">
+                <span>DISABLE CORTANA</span>
+              </label>
+              <label class="debloat-option" for="debloat-opt-network">
+                <input type="checkbox" id="debloat-opt-network">
+                <span>OPTIMIZE NETWORK LATENCY</span>
+              </label>
+            </div>
+            <div class="debloat-generate-wrap">
+              <button type="button" class="px-btn px-btn-lg" id="debloat-generate">GENERATE OPTIMIZER</button>
+            </div>
+          </div>
+          <div id="debloat-status" class="px-box mt-12" style="border-color:var(--gray);margin-top:16px;">
+            <div class="px-label">STATUS</div>
+            <div id="debloat-status-text" style="font-family:var(--font-vt);font-size:18px;color:var(--gray-light);line-height:1.5;">
+              CHECK MODULES AND PRESS GENERATE OPTIMIZER — output is a local .ps1 download only.
+            </div>
+          </div>
+        </div>
+      </div>
 
     </div>
 
@@ -649,10 +743,70 @@
   </main>
 </div>
 
+<footer id="dash-footer" class="dash-footer" aria-label="PIXEL.TOOLS AI drone deck">
+  <div class="dash-footer__grid-floor" aria-hidden="true"></div>
+  <div class="dash-footer__deck">
+    <div class="ai-drone-glide" aria-hidden="true">
+      <svg class="ai-drone" viewBox="0 0 44 32" width="72" height="52"
+           xmlns="http://www.w3.org/2000/svg" role="img"
+           aria-label="Engineered AI drone on patrol">
+        <!-- Thruster glow -->
+        <rect class="drone-thruster" x="10" y="28" width="5" height="2" fill="#0ff0fc"/>
+        <rect class="drone-thruster" x="27" y="28" width="5" height="2" fill="#0ff0fc"/>
+        <!-- Rear stabilizer -->
+        <rect x="6" y="16" width="4" height="8" fill="#122038"/>
+        <rect x="7" y="17" width="2" height="2" fill="#ffe600"/>
+        <!-- Main chassis -->
+        <rect x="10" y="14" width="22" height="11" fill="#0c1828" stroke="#39ff14" stroke-width="1"/>
+        <rect x="12" y="16" width="18" height="2" fill="#1a3050"/>
+        <!-- Multi-joint arm A -->
+        <rect class="drone-joint-a" x="8" y="12" width="6" height="3" fill="#22a005"/>
+        <rect x="5" y="14" width="3" height="3" fill="#39ff14"/>
+        <rect x="2" y="15" width="4" height="4" fill="#1a8a00"/>
+        <rect x="3" y="16" width="2" height="2" fill="#0ff0fc"/>
+        <!-- Multi-joint arm B -->
+        <rect class="drone-joint-b" x="8" y="18" width="6" height="2" fill="#22a005"/>
+        <rect x="4" y="19" width="3" height="2" fill="#39ff14"/>
+        <!-- Sensor dome + multi-camera rig -->
+        <rect x="28" y="9" width="12" height="8" fill="#081420"/>
+        <rect x="30" y="10" width="3" height="3" fill="#0ff0fc"/>
+        <rect x="35" y="11" width="2" height="2" fill="#ff2079"/>
+        <rect x="38" y="12" width="2" height="2" fill="#ffe600"/>
+        <rect x="32" y="14" width="2" height="2" fill="#39ff14" opacity="0.9"/>
+        <!-- Antenna / uplink -->
+        <rect class="drone-antenna" x="24" y="6" width="2" height="4" fill="#39ff14"/>
+        <rect x="23" y="5" width="4" height="1" fill="#0ff0fc"/>
+        <!-- Landing struts -->
+        <g class="drone-legs">
+          <rect x="14" y="25" width="2" height="4" fill="#39ff14"/>
+          <rect x="20" y="25" width="2" height="4" fill="#39ff14"/>
+          <rect x="26" y="25" width="2" height="4" fill="#1a8a00"/>
+        </g>
+        <!-- Belly cam -->
+        <rect x="18" y="22" width="2" height="2" fill="#0ff0fc"/>
+      </svg>
+    </div>
+  </div>
+  <div class="dash-footer__hud">
+    <span class="dash-footer__brand">PIXEL.TOOLS</span>
+    <span class="dash-footer__tag">AI DRONE // PATROL</span>
+  </div>
+</footer>
+
+</div><!-- /#dash-page -->
+
+<!-- Dashboard settings — viewport bottom-right -->
+<button type="button" id="dash-settings-fab" class="dash-settings-fab"
+        aria-expanded="false" aria-controls="px-settings-modal"
+        onclick="PixelSettings.toggle()">&#9881; SETTINGS</button>
+
+<!-- Unified settings modal injected by lang_unified.js (PixelSettings) -->
+
 <!-- Toast container -->
 <div id="px-toast-container"></div>
 
-<!-- Scripts — config first, then core -->
+<!-- Scripts — lang first, then config, then core -->
+<script src="js/lang_unified.js"></script>
 <script src="js/config.js"></script>
 <script src="js/auth.js"></script>
 <script src="js/audio.js"></script>
@@ -668,6 +822,13 @@
 <script src="js/tools/todo.js"></script>
 <script src="js/tools/pomodoro.js"></script>
 <script src="js/tools/json-formatter.js"></script>
+<script src="js/tools/ai-ctx.js"></script>
+<script src="js/tools/micro-digest.js"></script>
+<script src="js/tools/content-wiz.js"></script>
+<script src="js/tools/hd-format.js"></script>
+<script src="js/tools/stem-sep.js"></script>
+<script src="js/tools/loudness.js"></script>
+<script src="js/tools/windows-debloater.js"></script>
 
 <!-- Dashboard controller -->
 <script src="js/dashboard.js"></script>
@@ -695,77 +856,15 @@ function toggleTheme() {
   var icon = document.getElementById('theme-toggle');
   if (icon) icon.textContent = t === 'light' ? '\u263E' : '\u2600';
 })();
+
+/* ══ Dashboard settings — delegate to unified PixelSettings ══ */
+function toggleDashSettings() { PixelSettings.toggle(); }
+function closeDashSettings()  { PixelSettings.close();  }
+
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') closeDashSettings();
+});
 </script>
-
-<!-- ── MECHANICAL BUG SCENE ── -->
-<div id="px-bug-scene" aria-hidden="true">
-  <svg id="px-bug-svg" viewBox="0 0 22 9" width="88" height="36"
-       xmlns="http://www.w3.org/2000/svg">
-
-    <!-- ── ANTENNA ── -->
-    <rect x="1" y="0" width="1" height="1" fill="#39ff14"/>
-    <rect x="2" y="1" width="1" height="1" fill="#39ff14"/>
-
-    <!-- ── HEAD (4×3) ── -->
-    <rect x="1" y="2" width="4" height="3" fill="#39ff14"/>
-    <!-- Eye (cyan accent) -->
-    <rect x="2" y="3" width="1" height="1" fill="#0ff0fc"/>
-    <!-- Jaw detail -->
-    <rect x="1" y="4" width="2" height="1" fill="#1a8a00"/>
-    <!-- Mandible -->
-    <rect x="0" y="3" width="1" height="1" fill="#39ff14"/>
-
-    <!-- ── NECK JOINT ── -->
-    <rect x="5" y="3" width="1" height="1" fill="#0a0a0a"/>
-
-    <!-- ── BODY SEGMENT 1 (4×3) ── -->
-    <rect x="6" y="2" width="4" height="3" fill="#22a005"/>
-    <!-- Segment highlight -->
-    <rect x="7" y="2" width="2" height="1" fill="#39ff14"/>
-
-    <!-- ── SEGMENT JOINT 1 ── -->
-    <rect x="10" y="2" width="1" height="3" fill="#0a0a0a"/>
-
-    <!-- ── BODY SEGMENT 2 (4×3) ── -->
-    <rect x="11" y="2" width="4" height="3" fill="#22a005"/>
-    <rect x="12" y="2" width="2" height="1" fill="#39ff14"/>
-
-    <!-- ── SEGMENT JOINT 2 ── -->
-    <rect x="15" y="2" width="1" height="3" fill="#0a0a0a"/>
-
-    <!-- ── TAIL / ABDOMEN (tapered) ── -->
-    <rect x="16" y="2" width="3" height="3" fill="#1a8a00"/>
-    <rect x="19" y="3" width="2" height="1" fill="#1a8a00"/>
-    <rect x="21" y="3" width="1" height="1" fill="#0d4400"/>
-
-    <!-- ── LEG FRAME A (legs extended down) ── -->
-    <g id="bug-legs-a">
-      <!-- Front pair -->
-      <rect x="7"  y="5" width="1" height="2" fill="#39ff14"/>
-      <rect x="7"  y="6" width="2" height="1" fill="#39ff14"/>
-      <!-- Middle pair -->
-      <rect x="12" y="5" width="1" height="2" fill="#39ff14"/>
-      <rect x="12" y="6" width="2" height="1" fill="#39ff14"/>
-      <!-- Back pair -->
-      <rect x="17" y="5" width="1" height="2" fill="#1a8a00"/>
-      <rect x="17" y="6" width="2" height="1" fill="#1a8a00"/>
-    </g>
-
-    <!-- ── LEG FRAME B (alternate — legs swept back) ── -->
-    <g id="bug-legs-b">
-      <!-- Front pair swept back -->
-      <rect x="6"  y="5" width="2" height="1" fill="#39ff14"/>
-      <rect x="8"  y="5" width="1" height="2" fill="#39ff14"/>
-      <!-- Middle pair swept back -->
-      <rect x="11" y="5" width="2" height="1" fill="#39ff14"/>
-      <rect x="13" y="5" width="1" height="2" fill="#39ff14"/>
-      <!-- Back pair swept back -->
-      <rect x="16" y="5" width="2" height="1" fill="#1a8a00"/>
-      <rect x="18" y="5" width="1" height="2" fill="#1a8a00"/>
-    </g>
-
-  </svg>
-</div>
 
 </body>
 </html>
