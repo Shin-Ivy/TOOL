@@ -5,19 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PIXEL.TOOLS — INSERT COIN</title>
   <meta name="description" content="Everyday Web Utilities Dashboard — A retro 8-bit powered toolbox for developers and power users.">
+  <meta name="application-name" content="PIXEL.TOOLS">
+  <link rel="manifest" href="/manifest.json?v=2">
+  <meta name="theme-color" content="#00FF00">
+  <meta name="color-scheme" content="dark">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="PIXEL">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="icon" type="image/png" sizes="192x192" href="/img/icon-192.png?v=2">
+  <link rel="icon" type="image/png" sizes="512x512" href="/img/icon-512.png?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/icon-180.png?v=2">
+  <link rel="apple-touch-icon" sizes="192x192" href="/img/icon-192.png?v=2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap" rel="stylesheet">
+  <script src="js/theme-bootstrap.js"></script>
   <link rel="stylesheet" href="css/pixel.css">
-  <!-- Anti-FART: apply saved theme before first paint -->
-  <script>
-    (function(){
-      var t = localStorage.getItem('pixel_theme') || 'dark';
-      document.documentElement.setAttribute('data-theme', t);
-      var l = localStorage.getItem('pixel_lang') || localStorage.getItem('savedLanguage');
-      if (l === 'id') document.documentElement.lang = 'id';
-    })();
-  </script>
   <style>
     /* ═══════════════════════════════════════════════════════
        LOGIN PAGE BASE
@@ -29,7 +34,7 @@
       justify-content: center;
       min-height: 100vh;
       overflow: hidden;
-      background: #050814;
+      background: var(--black);
     }
 
     /* ═══════════════════════════════════════════════════════
@@ -735,9 +740,9 @@
     </div>
   </div>
 
-  <div class="login-panel__settings-anchor">
+  <div class="login-panel__footer">
     <button type="button" id="login-settings-btn"
-            class="px-settings-trigger px-settings-trigger--panel-corner"
+            class="px-settings-trigger px-settings-trigger--panel-inline"
             aria-expanded="false"
             aria-controls="px-settings-modal"
             data-i18n-title="settings_btn"
@@ -751,10 +756,13 @@
      SCRIPTS
      ════════════════════════════════════════════════════════ -->
 <script src="js/config.js"></script>
+<script src="js/pixel-theme.js"></script>
 <script src="js/lang_unified.js"></script>
+<script src="js/notifications.js"></script>
 <script src="js/login-ui.js"></script>
 <script src="https://accounts.google.com/gsi/client" async></script>
 <script src="js/auth.js"></script>
+<script src="js/pwa-register.js"></script>
 
 <script>
   /* ══════════════════════════════════════════

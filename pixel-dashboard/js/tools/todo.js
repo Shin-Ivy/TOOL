@@ -19,6 +19,11 @@ const TodoList = (() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }
 
+  function getItems() {
+    loadItems();
+    return items.slice();
+  }
+
   function getStreak() {
     try { return parseInt(localStorage.getItem(STREAK_KEY) || '0'); } catch(e) { return 0; }
   }
@@ -113,6 +118,10 @@ const TodoList = (() => {
 
     setFilter('all');
     renderStreak();
+
+    if (typeof PixelNotify !== 'undefined') {
+      PixelNotify.requestPermission({ flashTarget: '#tool-todo', quiet: true });
+    }
   }
 
   let currentFilter = 'all';
@@ -234,5 +243,5 @@ const TodoList = (() => {
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
-  return { init, addItem, toggleItem, deleteItem, clearDone, setFilter };
+  return { init, addItem, toggleItem, deleteItem, clearDone, setFilter, getItems };
 })();

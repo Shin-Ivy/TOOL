@@ -61,10 +61,38 @@ function getCurrentUser() {
   }
 }
 
-function signOut() {
+function signOut(opts) {
+  const options = opts || {};
   sessionStorage.removeItem(SESSION_KEY);
   try { window.google?.accounts?.id?.disableAutoSelect(); } catch (_) {}
-  window.location.href = 'index.html';
+  if (options.redirect === false) return;
+  window.location.href = options.to || 'index.html';
+}
+
+/** Clear session and open Google account picker (login page or redirect). */
+async function switchAccount() {
+  sessionStorage.removeItem(SESSION_KEY);
+  try { window.google?.accounts?.id?.disableAutoSelect(); } catch (_) {}
+
+  try {
+    const mod = await import('./supabase-config.js');
+    if (mod.isSupabaseConfigured()) {
+      await mod.supabase.auth.signOut();
+    }
+  } catch (_) { /* optional */ }
+
+  const onDashboard = window.location.pathname.toLowerCase().includes('dashboard');
+
+  if (onDashboard) {
+    window.location.href = 'index.html?switch=1';
+    return;
+  }
+
+  if (typeof PixelSettings !== 'undefined') PixelSettings.close();
+
+  if (typeof handleGoogleSignIn === 'function') {
+    handleGoogleSignIn();
+  }
 }
 
 
@@ -220,10 +248,17 @@ window.addEventListener('load', () => {
   // Skip entirely if we're on the dashboard — dashboard.js guards itself
   if (window.location.pathname.toLowerCase().includes('dashboard')) return;
 
-  // Already authenticated — bounce straight to dashboard
-  if (getCurrentUser()) {
+  const wantsSwitch = new URLSearchParams(window.location.search).get('switch') === '1';
+
+  // Already authenticated — bounce to dashboard (unless switching accounts)
+  if (getCurrentUser() && !wantsSwitch) {
     window.location.href = 'dashboard.html';
     return;
+  }
+
+  if (wantsSwitch) {
+    sessionStorage.removeItem(SESSION_KEY);
+    try { history.replaceState({}, '', window.location.pathname); } catch (_) {}
   }
 
   // Client ID not configured → show setup warning, stop
@@ -280,6 +315,10 @@ window.addEventListener('load', () => {
       animateHpBar(100);
       showLoadingMsg('READY — PRESS START ▶');
       console.info('[PIXEL.AUTH] GIS token client initialised.');
+
+      if (wantsSwitch) {
+        setTimeout(() => handleGoogleSignIn(), 400);
+      }
 
     } catch (initErr) {
       showLoadingMsg(`✖ GIS INIT FAILED: ${initErr.message}`, true);

@@ -1,0 +1,13 @@
+{
+  "name": "pixel-tools-workspace",
+  "private": true,
+  "scripts": {
+    "sync:supabase": "node pixel-dashboard/scripts/sync-supabase-env.mjs",
+    "dev": "npm run sync:supabase && serve pixel-dashboard -l 5500",
+    "pwa:icons": "node pixel-dashboard/scripts/generate-pwa-icons.mjs",
+    "build": "npm run pwa:icons"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}
